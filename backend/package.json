@@ -1,0 +1,9 @@
+{
+  "name": "hls-protocol-example",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
