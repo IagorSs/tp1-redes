@@ -1,5 +1,6 @@
 import express from 'express';
 import { join } from 'path';
+import cors from 'cors';
 
 // Creating vars to filename and dirname
 import { fileURLToPath } from 'url';
@@ -11,6 +12,8 @@ const __dirname = dirname(__filename);
 
 const app = express();
 const baseDirectory = join(__dirname, 'hls'); // Caminho para os arquivos HLS
+
+app.use(cors());
 
 // Middleware para servir arquivos estáticos
 app.use(express.static(baseDirectory));
