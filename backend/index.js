@@ -17,11 +17,13 @@ app.use(express.static(baseDirectory));
 
 // Rota para arquivos HLS
 app.get('/*', (req, res) => {
-    const filePath = join(baseDirectory, req.url);
+    const { url } = req;
+
+    const filePath = join(baseDirectory, url);
 
     res.sendFile(filePath, (err) => {
         if (err) {
-            res.status(404).send('File not found');
+            res.sendStatus(404);
         }
     });
 });
