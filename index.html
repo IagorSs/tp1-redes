@@ -3,24 +3,62 @@
   <head>
     <title>HLS Streaming</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+      #log {
+        width: 80%;
+        height: 200px;
+        overflow-y: scroll;
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-top: 20px;
+        background-color: #f9f9f9;
+      }
+      #log div {
+        margin-bottom: 5px;
+      }
+    </style>
   </head>
   <body>
     <video id="video" controls></video>
+    <h1>HLS Streaming</h1>
+    <div id="log"></div>
     <script>
+      // Função para registrar mensagens
+      function logMessage(message) {
+        var logDiv = document.getElementById("log");
+        var newMessage = document.createElement("div");
+        newMessage.textContent = message;
+        logDiv.appendChild(newMessage);
+      }
+
       var video = document.getElementById("video");
       if (Hls.isSupported()) {
         var hls = new Hls();
-        hls.loadSource(
-          "https://young-badlands-85378-a5e99487b853.herokuapp.com/intro_redes.m3u8"
-        );
+        const videoSource =
+          "https://young-badlands-85378-a5e99487b853.herokuapp.com/intro_redes.m3u8";
+
+        hls.loadSource(videoSource);
+
         hls.attachMedia(video);
+
         hls.on(Hls.Events.MANIFEST_PARSED, function () {
+          logMessage("Iniciando a reprodução:");
           video.play();
         });
+
+        // Evento para logar quando um fragmento HLS é carregado
+        hls.on(Hls.Events.FRAG_LOADING, function (event, data) {
+          logMessage(`Fragmento de HLS requisitado: ${data.frag.url}`);
+        });
       } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-        video.src =
+        const videoSource =
           "https://young-badlands-85378-a5e99487b853.herokuapp.com/index.m3u8";
+
+        // Log de carregamento da fonte
+        logMessage(`Loading video source: ${videoSource}`);
+        video.src = videoSource;
         video.addEventListener("canplay", function () {
+          logMessage("Video can play, starting playback.");
           video.play();
         });
       }
