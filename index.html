@@ -33,9 +33,10 @@
 
       var video = document.getElementById("video");
       if (Hls.isSupported()) {
+        const hostUrl = "https://tp1-redes.onrender.com";
+
         var hls = new Hls();
-        const videoSource =
-          "https://young-badlands-85378-a5e99487b853.herokuapp.com/intro_redes.m3u8";
+        const videoSource = `${hostUrl}/intro_redes.m3u8`;
 
         hls.loadSource(videoSource);
 
