@@ -4,31 +4,77 @@
     <title>HLS Streaming</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
-      #log {
-        width: 80%;
-        height: 200px;
-        overflow-y: scroll;
-        border: 1px solid #ccc;
-        padding: 10px;
-        margin-top: 20px;
-        background-color: #f9f9f9;
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        text-align: center;
+        color: #333;
+        margin: 0;
+        padding: 0;
       }
+
+      h1 {
+        margin: 20px 0;
+        font-size: 2rem;
+        color: #444;
+      }
+
+      video {
+        width: 40%;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin: 20px auto;
+        display: block;
+      }
+
+      #log-container {
+        width: 70%;
+        margin: 20px auto;
+        text-align: left;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        font-size: 0.9rem;
+      }
+
+      #log-title {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+        font-weight: bold;
+        color: #555;
+        border-bottom: 2px solid #e0e0e0;
+        padding-bottom: 5px;
+      }
+
+      #log {
+        max-height: 200px;
+        overflow-y: auto;
+        padding: 10px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+      }
+
       #log div {
         margin-bottom: 5px;
       }
     </style>
   </head>
   <body>
-    <video id="video" controls></video>
     <h1>HLS Streaming</h1>
-    <div id="log"></div>
+    <video id="video" controls></video>
+
+    <div id="log-container">
+      <div id="log-title">Fragmentos HLS Requisitados</div>
+      <div id="log"></div>
+    </div>
+
     <script>
-      // Função para registrar mensagens
       function logMessage(message) {
         var logDiv = document.getElementById("log");
         var newMessage = document.createElement("div");
         newMessage.textContent = message;
-        logDiv.appendChild(newMessage);
+        logDiv.insertBefore(newMessage, logDiv.firstChild);
       }
 
       var video = document.getElementById("video");
@@ -43,13 +89,12 @@
         hls.attachMedia(video);
 
         hls.on(Hls.Events.MANIFEST_PARSED, function () {
-          logMessage("Iniciando a reprodução:");
           video.play();
         });
 
-        // Evento para logar quando um fragmento HLS é carregado
         hls.on(Hls.Events.FRAG_LOADING, function (event, data) {
-          logMessage(`Fragmento de HLS requisitado: ${data.frag.url}`);
+          const fileName = data.frag.url.split("/").pop();
+          logMessage(`Fragmento de HLS requisitado: ${fileName}`);
         });
       } else {
         logMessage("Cannot start video because your browser don't support HLS");
